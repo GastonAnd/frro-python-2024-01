@@ -4,7 +4,8 @@ import os
 from flask_bcrypt import Bcrypt
 from flask_wtf.csrf import CSRFProtect
 from dotenv import load_dotenv
-
+import pymysql
+pymysql.install_as_MySQLdb()
 load_dotenv()
 
 # Inicializaciones
