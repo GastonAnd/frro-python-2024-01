@@ -41,7 +41,7 @@
         <span class="text-white me-3">Hola, {{ session['user_name'] }}</span>
         <a
           href="{{ url_for('auth.logout') }}"
-          class="btn btn-outline-danger m-3"
+          class="btn btn-outline-danger m-3 d-none d-md-block"
           >Cerrar Sesión</a
         >
       </div>
@@ -52,12 +52,61 @@
         </button>
       </form>
       {% endif %}
+      <button
+        class="btn btn-primary d-md-none m-2"
+        type="button"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#offcanvasSidebar"
+        aria-controls="offcanvasSidebar"
+      >
+        <i class="bi bi-list"></i>
+      </button>
     </header>
     {% if show_canvas %}
 
     <div class="container-fluid">
       <div class="row">
-        <!-- Sidebar / Offcanvas -->
+        <div
+          class="offcanvas offcanvas-start d-md-none"
+          tabindex="-1"
+          id="offcanvasSidebar"
+          aria-labelledby="offcanvasSidebarLabel"
+        >
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasSidebarLabel">Menú</h5>
+            <button
+              type="button"
+              class="btn-close text-reset"
+              data-bs-dismiss="offcanvas"
+              aria-label="Cerrar"
+            ></button>
+          </div>
+          <div class="offcanvas-body">
+            <!-- Contenido del menú -->
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('main.home') }}"
+                  >Ingresos y gastos</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('user.reports') }}"
+                  >Reportes</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('user.prediccion') }}"
+                  >Predicción</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('auth.logout') }}"
+                  >Cerrar Sesión</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
         <nav
           id="sidebar"
           class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse"

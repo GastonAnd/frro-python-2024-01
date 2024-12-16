@@ -1,184 +1,182 @@
-{% extends "base.html" %} {% block title %}Home - Finanzio{% endblock %} {%
-block content %}
-<div class="d-flex justify-content-between align-items-center mt-3 mb-4">
-  <h1 class="m-0">Mis ingresos y gastos</h1>
-  <div>
-    <button
-      class="btn btn-success me-2"
-      data-bs-toggle="modal"
-      data-bs-target="#modalIngresos"
-    >
-      Agregar Ingresos
-    </button>
-    <button
-      class="btn btn-danger"
-      data-bs-toggle="modal"
-      data-bs-target="#modalGastos"
-    >
-      Agregar Gastos
-    </button>
-  </div>
-</div>
-<!-- Contenido principal -->
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
 
-<div class="container mt-5">
-  <div class="card">
-    <div class="card-header">
-      <!-- Nav tabs -->
-      <ul
-        class="nav nav-tabs card-header-tabs justify-content-center"
-        id="myTab"
-        role="tablist"
+    <title>{% block title %}Finanzio{% endblock %}</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='/style.css') }}"
+    />
+  </head>
+  <body>
+    <header class="navbar sticky-top flex-md-nowrap p-0 header-custom">
+      <a
+        class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-4 text-white"
+        href="{{url_for('main.index')}}"
+        >Finanzio</a
       >
-        <li class="nav-item" role="presentation">
-          <button
-            class="nav-link active"
-            id="ingresos-tab"
-            data-bs-toggle="tab"
-            data-bs-target="#ingresos"
-            type="button"
-            role="tab"
-            aria-controls="ingresos"
-            aria-selected="true"
-          >
-            Ingresos
-          </button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button
-            class="nav-link"
-            id="gastos-tab"
-            data-bs-toggle="tab"
-            data-bs-target="#gastos"
-            type="button"
-            role="tab"
-            aria-controls="gastos"
-            aria-selected="false"
-          >
-            Gastos
-          </button>
-        </li>
-      </ul>
-    </div>
-    <div class="card-body">
-      <!-- Tab content -->
-      <div class="tab-content mt-3" id="myTabContent">
-        <!-- Contenido de Ingresos -->
-        <div
-          class="tab-pane fade show active"
-          id="ingresos"
-          role="tabpanel"
-          aria-labelledby="ingresos-tab"
+      {% if "user_id" in session %}
+      <div class="d-flex align-items-center">
+        <span class="text-white me-3">Hola, {{ session['user_name'] }}</span>
+        <a
+          href="{{ url_for('auth.logout') }}"
+          class="btn btn-outline-danger m-3 d-none d-md-block"
+          >Cerrar Sesión</a
         >
-          <h4>Últimos ingresos del mes</h4>
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>Fecha</th>
-                <th>Monto</th>
-                <th>Descripción</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for ingreso in ingresos %}
-              <tr>
-                <td>{{ ingreso.fecha_ingreso.strftime('%d/%m/%Y') }}</td>
-                <td>${{ ingreso.monto }}</td>
-                <td>{{ ingreso.descripcion }}</td>
-              </tr>
-              {% else %}
-              <tr>
-                <td colspan="3" class="text-center">
-                  No hay ingresos registrados para este mes.
-                </td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-          <p>Total de ingresos en el último mes: ${{ total_ingresos }}</p>
+      </div>
+      {% else %}
+      <form class="d-flex" action="{{ url_for('auth.login') }}">
+        <button class="btn btn-outline-success m-3" type="submit">
+          Iniciar Sesión
+        </button>
+      </form>
+      {% endif %}
+
+      <button
+        class="btn btn-primary d-md-none m-2"
+        type="button"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#offcanvasSidebar"
+        aria-controls="offcanvasSidebar"
+      >
+        <i class="bi bi-list"></i>
+        <!-- Ícono del menú -->
+      </button>
+    </header>
+    {% if show_canvas %}
+
+    <div class="container-fluid">
+      <div class="row">
+        <div
+          class="offcanvas offcanvas-start d-md-none"
+          tabindex="-1"
+          id="offcanvasSidebar"
+          aria-labelledby="offcanvasSidebarLabel"
+        >
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasSidebarLabel">Menú</h5>
+            <button
+              type="button"
+              class="btn-close text-reset"
+              data-bs-dismiss="offcanvas"
+              aria-label="Cerrar"
+            ></button>
+          </div>
+          <div class="offcanvas-body">
+            <!-- Contenido del menú -->
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('main.home') }}"
+                  >Ingresos y gastos</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('user.reports') }}"
+                  >Reportes</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('user.prediccion') }}"
+                  >Predicción</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('auth.logout') }}"
+                  >Cerrar Sesión</a
+                >
+              </li>
+            </ul>
+          </div>
         </div>
 
-        <!-- Contenido de Gastos -->
-        <div
-          class="tab-pane fade"
-          id="gastos"
-          role="tabpanel"
-          aria-labelledby="gastos-tab"
+        <!-- Sidebar / Offcanvas -->
+        <nav
+          id="sidebar"
+          class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse"
         >
-          <h4>Últimos gastos del mes</h4>
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Fecha</th>
-                <th>Monto</th>
-                <th>Descripción</th>
-                <th>Categoría</th>
-                <th>Editar</th>
-                <th>Eliminar</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for gasto in gastos %}
-              <tr>
-                <td>{{gasto.id_gasto}}</td>
-                <td>{{ gasto.fecha_gasto.strftime('%d/%m/%Y') }}</td>
-                <td>${{ gasto.monto }}</td>
-                <td>{{ gasto.descripcion }}</td>
-                <td>{{ gasto.categoria.descripcion }}</td>
-                <td>
-                  <a
-                    href="{{ url_for('user.editar_gasto', id=gasto.id_gasto) }}"
-                    class="btn btn-sm btn-primary"
-                  >
-                    <i class="bi bi-pencil"></i>
-                  </a>
-                </td>
-                <td>
-                  <form
-                    method="POST"
-                    action="{{ url_for('user.eliminar_gasto', id_gasto=gasto.id_gasto) }}"
-                    style="display: inline"
-                  >
-                    <input
-                      type="hidden"
-                      name="csrf_token"
-                      value="{{ csrf_token() }}"
-                    />
-                    <button
-                      type="submit"
-                      class="btn btn-danger btn-sm"
-                      onclick="return confirm('¿Estás seguro de que deseas eliminar este gasto?');"
-                    >
-                      Eliminar
-                    </button>
-                  </form>
-                </td>
-              </tr>
-              {% else %}
-              <tr>
-                <td colspan="4" class="text-center">
-                  No hay gastos registrados para este mes.
-                </td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-          <p>Total de gastos en el último mes: ${{calculo_total_gastos }}</p>
-        </div>
+          <div class="position-sticky pt-3">
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a
+                  class="nav-link active offcanvas-item"
+                  href="{{url_for('main.home')}}"
+                  >Ingresos y gastos</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link offcanvas-item"
+                  href="{{url_for('user.reports')}}"
+                  >Reportes</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link offcanvas-item"
+                  href="{{url_for('user.prediccion')}}"
+                  >Predicción</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link offcanvas-item"
+                  href="{{url_for('auth.logout')}}"
+                  >Cerrar Sesión</a
+                >
+              </li>
+            </ul>
+          </div>
+        </nav>
+        <!-- Main Content -->
+        {% endif %}
+
+        <main
+          class="col-md-9 ms-sm-auto col-lg-10 px-md-4 {% if show_canvas %}with-sidebar{% endif %}"
+        >
+          {% block content %}{% endblock %}
+        </main>
       </div>
     </div>
-  </div>
-</div>
+    <footer class="footer-custom text-center py-3">
+      <div class="container">
+        <a
+          href="https://github.com/santicinel/frro-python-2024-01/tree/master/aa_TPI_Finanzas/finanzio"
+          target="_blank"
+          class="d-inline-flex align-items-center text-decoration-none text-dark"
+        >
+          <i class="fab fa-github fa-2x me-2"></i>
+          <!-- Icono de GitHub -->
+          <span type="hidden">Finanzio</span>
+        </a>
+        <p class="mt-2 text-muted">
+          © 2024 Finanzio.Grupo 01 FRRO UTN Soporte 2024.
+        </p>
+      </div>
+    </footer>
 
-<div class="container mt-3">
-  <div class="card">
-    <div class="card-header">
-      <h4 class="">
-        Saldo restante en el mes: ${{total_ingresos - calculo_total_gastos }}
-      </h4>
-    </div>
-  </div>
-</div>
-
-{% include "modals.html" %} {% endblock %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
