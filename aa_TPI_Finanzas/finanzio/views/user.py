@@ -222,7 +222,7 @@ def editar_gasto(id):
 
         db.session.commit()
         flash("El gasto se ha actualizado correctamente", "success")
-        return redirect(url_for('user.editargasto'))
+        return redirect(url_for('main.home'))
 
     tipos_gastos = obtener_tipos_gasto()
     return render_template('editargasto.html',
@@ -230,7 +230,7 @@ def editar_gasto(id):
                            show_login_button=False,
                            gasto=gasto,
                            categorias=categorias,
-                           tipos_gastos=tipos_gastos,)
+                           tipos_gastos=tipos_gastos)
 
 
 @user_bp.route('/eliminar_gasto/<int:id_gasto>', methods=['POST'])

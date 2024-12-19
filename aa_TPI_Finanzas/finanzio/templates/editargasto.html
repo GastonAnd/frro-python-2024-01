@@ -5,9 +5,8 @@
     <div class="card shadow" style="width: 28rem;">
         <div class="card-body">
             <h5 class="card-title text-center mb-4">Editar Gasto</h5>
-            <form method="POST">
+           <form method="POST" action="{{ url_for('user.editar_gasto', id=gasto.id_gasto) }}">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-                
                 <div class="mb-3">
                     <label for="monto" class="form-label">Monto</label>
                     <input type="number" id="monto" name="monto" class="form-control form-control-sm" value="{{ gasto.monto }}" required />
@@ -47,3 +46,4 @@
 </div>
 {% include "alerts.html" %}
 {% endblock %}
+
