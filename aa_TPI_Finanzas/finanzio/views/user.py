@@ -35,7 +35,7 @@ def ingreso_dinero():
         
         except Exception as e:
             db.session.rollback()
-            flash(f'Error al ingreso : {e}','danger')
+            flash(f'Error al realizar el ingreso, todos los campos deben ser completados','danger')
             return redirect(url_for('main.home'))
     return redirect(url_for('main.home'))
 
@@ -70,7 +70,7 @@ def ingreso_gasto():
             flash("Gasto agregado correctamente","success")
             return redirect(url_for('main.home'))
         except Exception as e:
-            flash(f"Error al agregar el gasto:{str(e)}","error")
+            flash(f"Error al agregar el gasto","error")
             return redirect(url_for('main.home'))
     
     return render_template('home.html',tipos_gasto=tipos_gasto)
@@ -158,8 +158,7 @@ def reports():
                            graph_html2=graph_html2,
                            resultados=resultados)
     except Exception as e:
-        print("Error capt",e)
-        flash(str(e),"danger")
+        flash("Se produjo un error","danger")
         return redirect(url_for('main.home'))
 
 @user_bp.route('/prediccion',methods=['GET'])

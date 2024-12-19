@@ -5,6 +5,18 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
     <!-- Primer gráfico: Ingresos vs Gastos -->
+    {% with messages = get_flashed_messages() %} {% if messages %}
+
+    <div class="alert alert-warning">
+      {% for message in messages %}
+
+      <p>{{ message }}</p>
+
+      {% endfor %}
+    </div>
+
+    {% endif %} {% endwith %}
+
     <div class="col-md-6 mb-4">
       <h3 class="text-center">Ingresos vs Gastos</h3>
       <div class="text-center">{{ graph_html | safe }}</div>
