@@ -20,6 +20,17 @@ block content %}
   </div>
 </div>
 <!-- Contenido principal -->
+{% with messages = get_flashed_messages() %} {% if messages %}
+
+<div class="alert alert-warning">
+  {% for message in messages %}
+
+  <p>{{ message }}</p>
+
+  {% endfor %}
+</div>
+
+{% endif %} {% endwith %}
 
 <div class="container mt-5">
   <div class="card">
