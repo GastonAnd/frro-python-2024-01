@@ -159,7 +159,7 @@ def reports():
                            resultados=resultados)
     except Exception as e:
         flash("Se produjo un error","danger")
-        return redirect(url_for('main.home'))
+        return redirect(url_for('user.reports'))
 
 @user_bp.route('/prediccion',methods=['GET'])
 def prediccion():
